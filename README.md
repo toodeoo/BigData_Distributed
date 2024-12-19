@@ -66,9 +66,9 @@
 #### 分布式部署
 
 部署四台虚拟机，其中 ecnu01 为主节点，ecnu02、ecnu03 为从节点，ecnu04 为客户端。在 HDFS 的 input 文件夹中存储 `pd.train` 数据集，主节点上启动 HDFS 和 yarn 服务，并由客户端提交 jar 包运行应用。在 http://ecnu01:19888/ 中可以查询到运行结果如图：
-![分布式+WordCount](img\DisOrigin.png)
-![分布式+combine](img\DisCombine.png)
-![分布式+compress](img\DisComp.png)
+![分布式+WordCount](img/DisOrigin.png)
+![分布式+combine](img/DisCombine.png)
+![分布式+compress](img/DisComp.png)
 本机与分布式运行时间对比如下：
-![分布式](img\dis.png)
+![分布式](img/dis.png)
 可以看出，使用分布式部署之后不同方法的运行时间都有了显著下降，其中尤其是使用 Compress 方法的 WordCount ，运行时间仅为单机部署的 37.5%，总之，分布式部署可以有效缩短 MapReduce 的时间开销。
