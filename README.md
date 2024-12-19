@@ -32,7 +32,7 @@
 **Map 阶段**：将输入数据集分割成多个小块，并对每个小块进行处理。每个小块中的每一行数据都会被拆分成单词，并为每个单词生成一个键值对 (word, 1)。**Shuffle 阶段**：将所有 map 任务的输出结果进行重排，根据键值对中的键对数据进行排序和分组。相同的键会被分配到同一个 reduce 任务中。 **Reduce 阶段**：对每个分组中的键值对进行处理，将相同键的值累加，得到每个单词在数据集中出现的总次数。
 
 **性能分析**：记录单机环境下运行原始版本 WordCount 程序的执行时间和资源消耗情况，作为基准性能数据。统计得到运行时间为 335s。运行结果截图如下：
-![单机+WordCount](img\SimWordCount.png)
+![单机+WordCount](img/SimWordCount.png)
 
 #### 单机 + Combine
 
@@ -41,9 +41,9 @@
 **代码实现**：我们需要新建一个 `WordCountCombiner` 方法，继承 Reducer 方法，对每个具有相同键值对的值进行计数，输出类型为 Text 和 IntWritable 键值对。
 
 **性能分析**：加入了 Combine 的 WordCount 运行时间为 217s。运行结果截图如下：
-![单机+Combine](img\SimCombine.png)
+![单机+Combine](img/SimCombine.png)
 可以看出，使用 Combine 后运行时长约为原始版本的 65%，其运行效率得到了显著的提升。
-![单机+Combine对比](img\Sim1.png)
+![单机+Combine对比](img/Sim1.png)
 
 #### 单机 + Compress
 
@@ -52,11 +52,11 @@
 **代码实现**：只需要在 `WordCount` 主方法中添加压缩的部分，在这里为了便于本地运行，选择了 hadoop 自带的 bzip2 压缩格式。
 
 **性能分析**：加入了 Compress 的 WordCount 运行时间为 2309s，运行结果如下：
-![单机+Compress](img\SimCompress.png)
+![单机+Compress](img/SimCompress.png)
 在 shuffle 数量方面，原始版本的 shuffle 量为 28239821，而加入 Compress 之后 shuffle 数量变为 16343504，约为原始版本的 58%，大大减少了磁盘 IO 以及 shuffle 过程中的网络 IO ，从而提升了性能。
-![单机+Combine对比](img\Sim2.png)
+![单机+Combine对比](img/Sim2.png)
 而在运行时间方面，由于频繁计算带来的频繁压缩与解压缩操作导致 CPU 开销加大，运行时间也极大地增加。
-![单机+Combine对比](img\Sim3.png)
+![单机+Combine对比](img/Sim3.png)
 
 #### 单机 + 参数调整
 
