@@ -17,13 +17,20 @@
 
 | 名称         | 设置                 |
 | ------------ | -------------------- |
-| 本机操作系统 | Windows 10           |
+| 操作系统     | Ubuntu18.04          |
 | IDEA         | IntelliJ IDEA 2022.1 |
 | JDK          | JDK 1.8              |
 | 云端总节点数 | 4                    |
 | Hadoop 版本  | 2.10.1               |
 | 数据集       | pd.train             |
 | 数据集大小   | 2.02GB               |
+
+## 实验分工
+
+郑勤 - Combine+Compress 代码实现，分布式部署
+方蕴仪 - Combine+Compress 代码实现，分布式部署
+许瑞琪 - Combine+Compress 代码实现，分布式部署
+成涵吟 -
 
 ## 实验过程
 
@@ -42,6 +49,7 @@
 
 **性能分析**：加入了 Combine 的 WordCount 运行时间为 217s。运行结果截图如下：
 ![单机+Combine](img/SimCombine.png)
+
 可以看出，使用 Combine 后运行时长约为原始版本的 65%，其运行效率得到了显著的提升。
 ![单机+Combine对比](img/Sim1.png)
 
@@ -53,15 +61,17 @@
 
 **性能分析**：加入了 Compress 的 WordCount 运行时间为 2309s，运行结果如下：
 ![单机+Compress](img/SimCompress.png)
+
 在 shuffle 数量方面，原始版本的 shuffle 量为 28239821，而加入 Compress 之后 shuffle 数量变为 16343504，约为原始版本的 58%，大大减少了磁盘 IO 以及 shuffle 过程中的网络 IO ，从而提升了性能。
 ![单机+Combine对比](img/Sim2.png)
+
 而在运行时间方面，由于频繁计算带来的频繁压缩与解压缩操作导致 CPU 开销加大，运行时间也极大地增加。
 ![单机+Combine对比](img/Sim3.png)
 
 #### 单机 + 参数调整
 
 适当设置 Map 和 Reduce 任务的数量也可以提升 MapReduce 性能。过多的任务会增加调度和启动的开销，而过少的任务会导致单个任务负载过高，选择合适的参数可以提高整体性能。
-**代码实现**：增加 map 和 reduce 的工作节点数量这两个参数，统计分别遍历二者取值为 1~8 时的运行时间结果，
+**代码实现**：增加 map 和 reduce 的工作节点数量这两个参数，统计分别遍历二者取值为 1~ 10 时的运行时间结果，
 
 #### 分布式部署
 
@@ -71,7 +81,9 @@
 ![分布式+compress](img/DisComp.png)
 本机与分布式运行时间对比如下：
 ![分布式](img/dis.png)
+
 可以看出，使用分布式部署之后不同方法的运行时间都有了显著下降，其中尤其是使用 Compress 方法的 WordCount ，运行时间仅为单机部署的 37.5%，总之，分布式部署可以有效缩短 MapReduce 的时间开销。
 而在 shuffle 数量方面，结果对比如下：
 ![分布式](img/dis1.png)
-可以看出，在不同方法下，使用分布式部署后其 shuffle 数量都有了较大幅度的减小，其中使用 Combine 方法的 WordCount ，shuffle 数量仅为单机部署下的 42%，总之，分布式部署可以减少 reduce 阶段减少写入和读取的数据量，从而提升 MapReduce 的性能。
+
+可以看出，在不同方法下，使用分布式部署后其 shuffle 数量都有了较大幅度的减小，其中使用 Combine 方法的 WordCount ，shuffle 数量仅为单机部署下的 42%，总之，分布式部署可以减少 reduce 阶段写入和读取的数据量，从而提升 MapReduce 的性能。
